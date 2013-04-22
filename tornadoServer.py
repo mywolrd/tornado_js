@@ -4,6 +4,7 @@ import tornado.websocket
 import tornado.httpserver
 import os.path
 import myMazeGame as mazelib
+from itertools import chain
 
 class myGame:
     def __init__(self):
@@ -19,16 +20,39 @@ class myGame:
             self.game = GameRoom()
             self.Games.append(game)
             self.GameNum += 1
-
+    
     def getGame(self, gameNumber):
         return Games[gameNumber]
 
 
 class GameRoom:
     def __init__(self):
-        self.maze = mazelib.createMaze()
+        tempmaze = mazelib.createMaze()
+        tempmaze = list(chain(*tempmaze))
+        self.maze = ','.join(str(x) for x in tempmaze)
+        self.sockets = []
+        self.capacity = 4
+        self.numOfPlayers = 0
+        self.playersReady = 0
 
+    def addPlayer(self, socket):
+        self.sockets.append(socket)
+        self.numOfPlayers += 1
 
+    #call close on all sockets
+    def gamefinished(self):
+        pass
+
+    def canIaddPlayer(self):
+        return True if self.capacity > self.numOfPlayers else False
+
+    def playerReady(self):
+        self.playersReady += 1
+        
+        # send "start" message to every sockets in the game
+        if self.playersReady == self.numOfPlayers:
+            pass
+    
 class myWebSocket(tornado.websocket.WebSocketHandler):
     def open(self):
         print "Server Socket created!"
