@@ -1,0 +1,17 @@
+#misc{
+    background-color: #ffffff;
+    width: 150px;
+    height: 50px;
+    margin: auto auto auto auto;
+}
+
+#game {
+    background-color: #001111;
+    width: 1000px;
+    height: 500px;
+    margin: auto auto auto auto;
+}
+
+#preload-images{
+    display: none;
+}
