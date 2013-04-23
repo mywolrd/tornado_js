@@ -30,15 +30,17 @@ class Game:
 
         maze = None
         game = self.findAvailableGame()
-        
+        size = 0
+
         if game:
             game.addPlayer(socket)
             maze = game.getMaze()
+            size = game.getSize()
         else:
             if self.available:
                 available = False
         
-        return maze
+        return (size, maze)
 
     def findAvailableGame(self):
 
@@ -53,16 +55,21 @@ class Game:
    
 class GameRoom:
     def __init__(self):
-        self.createMaze()
+
         self.sockets = []
         self.capacity = 4
         self.numOfPlayers = 0
         self.playersReady = 0
+        self.size = 10
+        self.createMaze()
 
     def createMaze(self):
-        tempmaze = mazelib.createMaze(10)
+        tempmaze = mazelib.createMaze(self.size)
         tempmaze = list(chain(*tempmaze))
         self.maze = ','.join(str(x) for x in tempmaze)
+
+    def getSize(self):
+        return self.size
 
     def getMaze(self):
         return self.maze
@@ -91,7 +98,7 @@ class GameRoom:
         # send "start" message to every sockets in the game
         if self.playersReady == self.numOfPlayers:
             for socket in self.sockets:
-                socket.write_message("start");
+                socket.write_message("strt ");
     
 class MywebSocketHandler(tornado.websocket.WebSocketHandler):
     
@@ -99,10 +106,10 @@ class MywebSocketHandler(tornado.websocket.WebSocketHandler):
         self.game = game
 
     def open(self):
-        maze = self.game.addPlayer(self)
+        size, maze = self.game.addPlayer(self)
 
         if maze:
-            self.write_message("maze " + maze)
+            self.write_message("maze "+ str(size) + " " + maze)
         else:
             self.write_message("fail " + "CAN\'T JOIN")
 

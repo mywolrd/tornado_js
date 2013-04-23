@@ -16,9 +16,9 @@ Cell = namedtuple('Cell', 'x y')
 
 def createMaze(size):
     
-    N,S,E,W = 8,4,2,1
+    N,S,W,E = 8,4,2,1
 
-    dx = {N: 0, S: 0, E: -1, W: 1}
+    dx = {N: 0, S: 0, E: 1, W: -1}
     dy = {N: -1, S: 1, E: 0, W: 0 }
     opposite = {N: S, S: N, E:W, W:E}
 

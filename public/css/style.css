@@ -10,6 +10,8 @@
     width: 1000px;
     height: 500px;
     margin: auto auto auto auto;
+    border-width: 5px; border-style: solid; border-color: #FFBB00;
+
 }
 
 #preload-images{
