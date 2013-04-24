@@ -1,16 +1,3 @@
-function initStage(){
-
-    myApp.myPlayerImage.src = $("#image1")[0].src
-    myApp.myPlayerImage.onload = function(){
-
-        //myApp.layer.game.add(myApp.myPlayer);
-        //myApp.stage.game.add(myApp.layer.game);
-    }
-
-    myApp.layer.misc1.add(myApp.text.time);
-    myApp.stage.misc.add(myApp.layer.misc1);
-}
-
 function initKeyboardInput(){
 
     $(document).keydown(function (e){
@@ -59,14 +46,15 @@ function messageHandler(str){
 	callback = function(str){
 	    
 	    strs = str.split(' ');
-	    myApp.mazesize = parseInt(strs[0], 10);
-	    maze = strs[1].split(',');	
+	    myApp.mazesizew = parseInt(strs[0], 10);
+	    myApp.mazesizeh = parseInt(strs[1], 10);
+	    maze = strs[2].split(',');	
 	    myApp.maze = [];
 	    
-	    for(var i = 0; i < myApp.mazesize; i++){
+	    for(var i = 0; i < myApp.mazesizew; i++){
 		
 		myApp.maze[i] = [];
-		for(var j = 0; j < myApp.mazesize; j++){
+		for(var j = 0; j < myApp.mazesizeh; j++){
 		    myApp.maze[i][j] = parseInt(maze[(i*10)+j], 10);
 		}
 	    }
@@ -83,49 +71,6 @@ function messageHandler(str){
     
     callback(data);
 }
-
-function drawMaze(){
-
-    initStage();
-
-    var getWalls = function(x,y){
-	// returns 0 if (x, y) cell has no east, no south wall
-	//         1 if (x, y) cell has east, no south wall
-	//         2 if (x, y) cell has south wall, no east wall
-	//         3 if (x, y) cell has east and south wall
-	var wall = 0;
-	if( (myApp.maze[i][j] & 1) == 0)    wall = 1;
-
-	if( (myApp.maze[i][j] & 4) == 0){
-	    if( wall == 1)
-		wall = 3;
-	    else
-		wall = 2;
-	}
-	return wall;
-    }
-
-    x = myApp.stage.game.getWidth() / myApp.mazesize;
-    y = myApp.stage.game.getHeight() / myApp.mazesize;
-
-    for(var i = 0; i < myApp.mazesize; i++){
-	for(var j = 0; j < myApp.mazesize; j++){
-
-	    walls = getWalls(i, j);
-
-	    if(walls != 0){
-		if( (walls & 1) != 0 ){
-
-		}
-		if( (walls & 2) != 0){
-
-
-		}
-	    }
-	}
-    }
-}
-
 
 function inputHandlerKeyDown(){
 

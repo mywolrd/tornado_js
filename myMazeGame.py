@@ -14,7 +14,7 @@ import Queue
 Position = namedtuple('Position', 'x y')        
 Cell = namedtuple('Cell', 'x y')
 
-def createMaze(size):
+def createMaze(sizew, sizeh):
     
     N,S,W,E = 8,4,2,1
 
@@ -22,11 +22,11 @@ def createMaze(size):
     dy = {N: -1, S: 1, E: 0, W: 0 }
     opposite = {N: S, S: N, E:W, W:E}
 
-    maze = np.zeros((size, size), dtype=np.int8)
+    maze = np.zeros((sizew, sizeh), dtype=np.int8)
     
     cellStack = Queue.LifoQueue()
     
-    totalCells = size*size
+    totalCells = sizew*sizeh
     visitedCells = 1    
     current = Cell(0, 0)
     
@@ -38,7 +38,7 @@ def createMaze(size):
         random.shuffle(directions)                
         for i in directions:
             x, y = current.x + dx[i], current.y + dy[i]
-            if (0 <= x < size) and ( 0 <= y < size) and maze[x][y] == 0 :
+            if (0 <= x < sizew) and ( 0 <= y < sizeh) and maze[x][y] == 0 :
                 status = True
                 direction = i
                 break

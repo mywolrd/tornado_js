@@ -7,7 +7,6 @@ $(function(){
 
     myApp.layer.game = new Kinetic.Layer();
 
-    myApp.myPlayerImage = new Image();
 
     myApp.myPlayer = new Kinetic.Sprite({
         x:myApp.x,y:myApp.y,

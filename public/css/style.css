@@ -1,17 +1,43 @@
 #misc{
     background-color: #ffffff;
-    width: 150px;
-    height: 50px;
-    margin: auto auto auto auto;
+    position: absolute;
+    top: 0px; left: 50px;
+    width: 150px; height: 50px;
+    /*margin: auto auto auto auto;*/
 }
 
-#game {
-    background-color: #001111;
-    width: 1000px;
-    height: 500px;
-    margin: auto auto auto auto;
-    border-width: 5px; border-style: solid; border-color: #FFBB00;
+#enemy1{margin: auto auto auto auto;
+	border-width: 5px; border-style: solid; border-color: #FFD700;
+}
+/*#enemy2{margin: auto auto auto auto;
+	border-width: 5px; border-style: solid; border-color: #FFD700;
+}
+#enemy3{margin: auto auto auto auto;
+	border-width: 5px; border-style: solid; border-color: #FFD700;
+}
+#enemy4{margin: auto auto auto auto;
+	border-width: 5px; border-style: solid; border-color: #FFD700;
+}
+#enemy5{margin: auto auto auto auto;
+	border-width: 5px; border-style: solid; border-color: #FFD700;
+}
+#enemy6{margin: auto auto auto auto;
+	border-width: 5px; border-style: solid; border-color: #FFD700;
+}
+#enemy7{margin: auto auto auto auto;
+	border-width: 5px; border-style: solid; border-color: #FFD700;
+}
+#enemy8{margin: auto auto auto auto;
+	border-width: 5px; border-style: solid; border-color: #FFD700;
+}*/
 
+#game {
+    background-color: #ffffff;
+    position: absolute;
+    top: 100px; left: 50px;
+    width: 1000px; height: 500px;
+    /*margin: auto auto auto auto;*/
+    border-width: 5px; border-style: solid; border-color: #FFD700;
 }
 
 #preload-images{

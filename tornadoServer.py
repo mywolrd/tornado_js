@@ -29,18 +29,17 @@ class Game:
     def addPlayer(self, socket):
 
         maze = None
+        size = None
         game = self.findAvailableGame()
-        size = 0
-
+               
         if game:
-            game.addPlayer(socket)
-            maze = game.getMaze()
+            maze = game.addPlayer(socket)
             size = game.getSize()
         else:
             if self.available:
                 available = False
         
-        return (size, maze)
+        return (game, (size, maze))
 
     def findAvailableGame(self):
 
@@ -57,33 +56,28 @@ class GameRoom:
     def __init__(self):
 
         self.sockets = []
-        self.capacity = 4
+        self.mazes = []
+        self.capacity = 10000
         self.numOfPlayers = 0
         self.playersReady = 0
-        self.size = 10
-        self.createMaze()
-
-    def createMaze(self):
-        tempmaze = mazelib.createMaze(self.size)
-        tempmaze = list(chain(*tempmaze))
-        self.maze = ','.join(str(x) for x in tempmaze)
-
+        self.sizew = 20
+        self.sizeh = 10
+        
     def getSize(self):
-        return self.size
-
-    def getMaze(self):
-        return self.maze
+        return (self.sizew, self.sizeh)
 
     def getnumOfPlayers(self):
         return self.numOfPlayers
 
     def addPlayer(self, socket):
         if self.numOfPlayers < self.capacity:
+            maze = mazelib.createMaze(self.sizew, self.sizeh)
+            self.mazes.append(maze)
             self.sockets.append(socket)
             self.numOfPlayers += 1
-            return True
+            return self.mazes[self.numOfPlayers-1]
         else:
-            False
+            return None
 
     #call close on all sockets
     def gamefinished(self):
@@ -106,10 +100,23 @@ class MywebSocketHandler(tornado.websocket.WebSocketHandler):
         self.game = game
 
     def open(self):
-        size, maze = self.game.addPlayer(self)
+        self.add_player()
+        
+    def send_maze(self):
+        self.write_message("maze "+str(self.sizew)+" "+str(self.sizeh)+" "+self.maze)
 
-        if maze:
-            self.write_message("maze "+ str(size) + " " + maze)
+    def add_player(self):
+
+        game, mazeinfo = self.game.addPlayer(self)
+        
+        if game:
+            size, maze = mazeinfo
+            
+            maze = list(chain(*maze))
+            self.maze = ','.join(str(x) for x in maze)
+            self.sizew, self.sizeh = size
+
+            self.send_maze()
         else:
             self.write_message("fail " + "CAN\'T JOIN")
 
