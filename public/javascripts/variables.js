@@ -1,70 +1,44 @@
-$(function(){
-
-    myApp.stage.game = new Kinetic.Stage({
-        container: 'game',
-        width: 1000, height: 500
-    });
-
-    myApp.layer.game = new Kinetic.Layer();
-
-
-    myApp.myPlayer = new Kinetic.Sprite({
-        x:myApp.x,y:myApp.y,
-        image:myApp.myPlayerImage, animation:'idle',
-        animations: myApp.sprite, frameRate: 6, index: 0
-    });
-
-    //TEXT LAYER
-    myApp.stage.misc = new Kinetic.Stage({
-        container: 'misc',
-        width: 150, height: 50
-    });
-
-    myApp.layer.misc1 = new Kinetic.Layer();
-
-    myApp.text.time = new Kinetic.Text({
-        fill: 'black',
-        align: 'center',
-        x: 65, y: 2.5, width: 20,
-        fontSize: 30, fontFamily: 'Calibri',
-        text: '0'
-    });
-});
-
 myApp = {
 
     //TIME                                                                     
     time : 0,
 
-    //INPUT                                                                     
+    //INPUT
     keyInput : {},
     moveKeydown : false,
     currentDirection : 0, //    1                                              
-                          // 2  0  3                                            
-                          //    4                                              
-
+                          // 2  0  3
+                          //    4
     //GAME INFO
     ready : false,
     ingame: false,
     
     //PLAYER INFO
-    x : 10,
-    y : 10,
-    ts : 5,
+    x : 0,
+    y : 0,
+    ts : 7,
  
-    //GRAPHICS                                                                  
+    //GRAPHICS
     sprite : {
-        idle:[{x:26, y:30, width:52, height:70},
-              {x:128, y:30, width:52, height:70},
-              {x:228, y:30, width:52, height:70}],
-        walk:[{x:33, y:130, width:34, height:70},
-              {x:131, y:130, width:35, height:70},
-              {x:227, y:130, width:42, height:70}],
-        punch:[{x:34, y:230, width:32, height:70},
-               {x:128, y:230, width:47, height:70},
-               {x:227, y:230, width:48, height:70}]},
+        down:[{x:0, y:2, width:33, height:34},
+              {x:46, y:2, width:33, height:34},
+              {x:91, y:2, width:33, height:34}],
+
+        right:[{x:0, y:37, width:33, height:35},
+              {x:46, y:37, width:33, height:35},
+              {x:92, y:37, width:32, height:35}],
+
+        up:[{x:0, y:73, width:33, height:34},
+               {x:46, y:73, width:33, height:34},
+               {x:91, y:73, width:33, height:34}],
+
+        left:[{x:0, y:108, width:31, height:35},
+            {x:45, y:108, width:31, height:35},
+            {x:91, y:108, width:31, height:35}]},
+
 
     stage :{},
     layer :{},
-    text  :{}
+    text  :{},
+	maze : []
 }

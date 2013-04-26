@@ -9,7 +9,7 @@ from itertools import chain
 
 class Game:
     def __init__(self):
-        self.GameCapacity = 4
+        self.GameCapacity = 1
         self.numOfGames = 0
         self.available = True
         self.games = []
@@ -18,7 +18,7 @@ class Game:
         return self.numOfGames
     
     def createGame(self):
-        if self.numOfGames <= self.GameCapacity:
+        if self.numOfGames < self.GameCapacity:
             game = GameRoom()
             self.games.append(game)
             self.numOfGames += 1
@@ -57,7 +57,7 @@ class GameRoom:
 
         self.sockets = []
         self.mazes = []
-        self.capacity = 10000
+        self.capacity = 1000
         self.numOfPlayers = 0
         self.playersReady = 0
         self.sizew = 20
@@ -86,6 +86,16 @@ class GameRoom:
     def canIaddPlayer(self):
         return True if self.capacity > self.numOfPlayers else False
 
+    def everyoneReady(self):
+        i,j = 0
+        while(i < self.numOfPlayers):            
+            while( (i != j) and j < self.numOfPlayers ):
+                self.sockets[j].send_maze()
+                j += 1
+
+            i += 1
+            j = 0
+
     def playerReady(self):
         self.playersReady += 1
         
@@ -94,6 +104,9 @@ class GameRoom:
             for socket in self.sockets:
                 socket.write_message("strt ");
     
+    def removePlayer(self, socket):
+        pass
+
 class MywebSocketHandler(tornado.websocket.WebSocketHandler):
     
     def initialize(self, game):
@@ -102,8 +115,12 @@ class MywebSocketHandler(tornado.websocket.WebSocketHandler):
     def open(self):
         self.add_player()
         
+    def send_emaz(self):
+        self.write_message("emaz "+self.maze)
+        
     def send_maze(self):
-        self.write_message("maze "+str(self.sizew)+" "+str(self.sizeh)+" "+self.maze)
+        self.write_message("maze "+str(self.sizew)+" "
+                           +str(self.sizeh)+" "+self.maze)
 
     def add_player(self):
 
@@ -115,7 +132,6 @@ class MywebSocketHandler(tornado.websocket.WebSocketHandler):
             maze = list(chain(*maze))
             self.maze = ','.join(str(x) for x in maze)
             self.sizew, self.sizeh = size
-
             self.send_maze()
         else:
             self.write_message("fail " + "CAN\'T JOIN")

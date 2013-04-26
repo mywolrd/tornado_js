@@ -1,42 +1,62 @@
 #misc{
-    background-color: #ffffff;
-    position: absolute;
-    top: 0px; left: 50px;
-    width: 150px; height: 50px;
+    border-width: 5px; border-style: solid; border-color: #FFD700;
+    display: none;
     /*margin: auto auto auto auto;*/
 }
 
-#enemy1{margin: auto auto auto auto;
-	border-width: 5px; border-style: solid; border-color: #FFD700;
+#enemymazes{
+    margin: auto auto auto auto;
+    width:620px; height:600px;
+    float:right;
 }
-/*#enemy2{margin: auto auto auto auto;
-	border-width: 5px; border-style: solid; border-color: #FFD700;
+
+#empty{
+    width:620px; height:10px;
+    float:left
 }
-#enemy3{margin: auto auto auto auto;
-	border-width: 5px; border-style: solid; border-color: #FFD700;
+
+#enemy1{
+	float:left; width: 300px; height:150px;
+	border-width: 1px; border-style: solid; border-color: #FF0000;
+	display: none;
 }
-#enemy4{margin: auto auto auto auto;
-	border-width: 5px; border-style: solid; border-color: #FFD700;
+
+#enemy2{
+	float:right; width: 300px; height:150px;
+	border-width: 1px; border-style: solid; border-color: #FF69B4;
+	display: none;
 }
-#enemy5{margin: auto auto auto auto;
-	border-width: 5px; border-style: solid; border-color: #FFD700;
+
+#enemy3{
+	float:left; width: 300px; height:150px;
+	border-width: 1px; border-style: solid; border-color: #FFD700;
+	display: none;
 }
-#enemy6{margin: auto auto auto auto;
-	border-width: 5px; border-style: solid; border-color: #FFD700;
+
+#enemy4{
+	float:right; width: 300px; height:150px;
+	border-width: 1px; border-style: solid; border-color: #008000;
+	display: none;
 }
-#enemy7{margin: auto auto auto auto;
-	border-width: 5px; border-style: solid; border-color: #FFD700;
+
+#enemy5{
+	float:left; width: 300px; height:150px;
+	border-width: 1px; border-style: solid; border-color: #0000FF;
+	display: none;
 }
-#enemy8{margin: auto auto auto auto;
-	border-width: 5px; border-style: solid; border-color: #FFD700;
-}*/
+
+#enemy6{
+	float:right; width: 300px; height:150px;
+	border-width: 1px; border-style: solid; border-color: #800080;
+	display: none;
+}
 
 #game {
     background-color: #ffffff;
-    position: absolute;
-    top: 100px; left: 50px;
     width: 1000px; height: 500px;
-    /*margin: auto auto auto auto;*/
+    top: auto;
+    right:  auto;
+    bottom: auto;
     border-width: 5px; border-style: solid; border-color: #FFD700;
 }
 
