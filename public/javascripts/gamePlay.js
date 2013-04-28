@@ -8,6 +8,9 @@ function moveUp(){
 	if(canIgo(myApp.x, myApp.y, myApp.x+myApp.myPlayer.getAnimations()['up'][0].width, myApp.y)){
 		myApp.y -= myApp.ts;		
 		myApp.myPlayer.setY(myApp.y);
+		if(shouldISendUpdate(myApp.x, myApp.y,
+						myApp.x, myApp.y+myApp.myPlayer.getAnimations()['up'][0].height))
+			send_update();	
 	}
 }
 
@@ -23,6 +26,9 @@ function moveDown(){
 			myApp.y+myApp.myPlayer.getAnimations()['down'][0].height)){				
 		myApp.y += myApp.ts;
 		myApp.myPlayer.setY(myApp.y);
+		if(shouldISendUpdate(myApp.x, myApp.y,
+							myApp.x, myApp.y+myApp.myPlayer.getAnimations()['down'][0].height))
+			send_update();	
 	}
 }
 
@@ -33,9 +39,12 @@ function moveLeft(){
 		myApp.currentDirection = 2;
 	}
 
-	if(canIgo(myApp.x, myApp.y, myApp.x, myApp.y+myApp.myPlayer.getAnimations()['left'][0].width)){
+	if(canIgo(myApp.x, myApp.y, myApp.x, myApp.y+myApp.myPlayer.getAnimations()['left'][0].height)){
 		myApp.x -= myApp.ts;
 		myApp.myPlayer.setX(myApp.x);
+		if ( shouldISendUpdate(myApp.x, myApp.y,
+						myApp.x + myApp.myPlayer.getAnimations()['left'][0].width, myApp.y))
+			send_update();	
 	}
 }
 
@@ -51,7 +60,33 @@ function moveRight(){
 				myApp.y+myApp.myPlayer.getAnimations()['right'][0].height)){
 		myApp.x += myApp.ts;
 		myApp.myPlayer.setX(myApp.x);
+		if(shouldISendUpdate(myApp.x, myApp.y,
+						myApp.x+myApp.myPlayer.getAnimations()['right'][0].width, myApp.y))	
+			send_update();	
 	}
+}
+
+function shouldISendUpdate(x1, y1, x2, y2){
+
+	flag = false;
+
+	x1_cor = getXindex(x1);
+	y1_cor = getYindex(y1);
+	
+	x2_cor = getXindex(x2);
+	y2_cor = getYindex(y2);
+
+	if ( x1_cor == x2_cor && y1_cor == y2_cor ){
+		if( x1_cor != myApp.curx ){
+			myApp.curx = x1_cor;
+			flag = true;
+		}
+		if ( y1_cor != myApp.cury ){
+			myApp.cury = y1_cor;	
+			flag = true;		
+		}
+	}
+	return flag;
 }
 
 function canIgo(x1, y1, x2, y2){
@@ -88,9 +123,6 @@ function canIgo(x1, y1, x2, y2){
 	var next_x2 = getXindex(x2 + getDS(0));
 	var next_y2 = getYindex(y2 + getDS(1));
 
-	//console.log(x1_cor+" " +y1_cor+" " +x2_cor+" " +y2_cor);
-	//console.log(next_x1+" " +next_y1+" " +next_x2+" " +next_y2);
-
 	if(( next_x1 >= 0 && next_x1 < myApp.mazesizew) && (next_x2 >= 0 && next_x2 < myApp.mazesizew) 
 		&& (next_y1 >= 0 && next_y1 < myApp.mazesizeh) && ( next_y2 >= 0 && next_y2 < myApp.mazesizeh)){
 		
@@ -102,24 +134,24 @@ function canIgo(x1, y1, x2, y2){
 		
 		if( (x1_cor == next_x1) && (y1_cor == next_y1) ){
 			collision = 1;
-			console.log("Here");
 		}			
 		else{
-			console.log("There");
 			if ((x1_cor == x2_cor) && (y1_cor == y2_cor)){
-				collision = myApp.maze[0][x1_cor][y1_cor] & wall[myApp.currentDirection];
-				console.log(myApp.maze[0][x1_cor][y1_cor]+ " " +myApp.currentDirection);				
-				console.log(collision);					
-				console.log(x1_cor + " " + y1_cor + " " + x2_cor + " "+ y2_cor);			
+				collision = myApp.maze[0][x1_cor][y1_cor] & wall[myApp.currentDirection];		
 			}			
 			else{
-				console.log(x1_cor + " " + y1_cor + " " + x2_cor + " "+ y2_cor);	
 				collision = myApp.maze[0][x1_cor][y1_cor] & wall[myApp.currentDirection];
-				if (collision > 0)		
+				if (collision > 0){		
 					collision = myApp.maze[0][x2_cor][y2_cor] & wall[myApp.currentDirection];
+					if( collision > 0 ){
+						var wallEnd = [0,1,4,4,1]
+						collision = myApp.maze[0][next_x1][next_y1] & 
+									wallEnd[myApp.currentDirection];						
+					}
+				}
 			}
 		}
 	}
-
 	return (collision == 0)? false:true;	
 }
+

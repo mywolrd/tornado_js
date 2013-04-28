@@ -11,16 +11,15 @@ function initStage(){
 			animations: myApp.sprite, frameRate: 4, index: 0
 	    });
 		
-		myApp.currentDirection = 3;		  	
-		//myApp.myPlayer.setScale(0.8, 0.8);
+		myApp.currentDirection = 3;
 
 	    myApp.layer.game.add(myApp.myPlayer);       
-		myApp.stage.game.add(myApp.layer.game);    
+		myApp.stage[0].add(myApp.layer.game);    
 		myApp.myPlayer.start();	
 	}
 
-    myApp.layer.misc1.add(myApp.text.time);
-    myApp.stage.misc.add(myApp.layer.misc1);
+    //myApp.layer.misc1.add(myApp.text.time);
+    myApp.misc.add(myApp.layer.misc);
 }
 
 function update(){
@@ -49,7 +48,7 @@ function drawLimitedMaze(){
     far_y = (far_y > myApp.mazesizeh) ? myApp.mazesizeh : far_y;
 
 	clear();
-	drawMaze(myApp.stage.game, myApp.maze[0], str_x, str_y, far_x, far_y);
+	drawMaze(myApp.stage[0], myApp.maze[0], str_x, str_y, far_x, far_y);
 }
 
 function getXindex(x){

@@ -12,7 +12,12 @@ myApp = {
     //GAME INFO
     ready : false,
     ingame: false,
-    
+	numOfPlayers: 0,
+	goalx : 19,
+	goaly :  9,
+	curx :0,
+	cury :0,
+
     //PLAYER INFO
     x : 0,
     y : 0,
@@ -37,8 +42,9 @@ myApp = {
             {x:91, y:108, width:31, height:35}]},
 
 
-    stage :{},
+    stage :[],
     layer :{},
-    text  :{},
-	maze : []
+	maze : [],
+	player:[],
+	divNames:["none", "enemy1","enemy2","enemy3","enemy4","enemy5","enemy6"]
 }

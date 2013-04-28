@@ -1,17 +1,17 @@
 #misc{
-    border-width: 5px; border-style: solid; border-color: #FFD700;
-    display: none;
-    /*margin: auto auto auto auto;*/
+    margin: auto auto auto auto;
+	width: 1000px; height: 300px;		
+	float:left;
 }
 
 #enemymazes{
     margin: auto auto auto auto;
-    width:620px; height:600px;
+    width:610px; height:600px;
     float:right;
 }
 
 #empty{
-    width:620px; height:10px;
+    width:610px; height:10px;
     float:left
 }
 
@@ -54,6 +54,7 @@
 #game {
     background-color: #ffffff;
     width: 1000px; height: 500px;
+	float: left;
     top: auto;
     right:  auto;
     bottom: auto;
