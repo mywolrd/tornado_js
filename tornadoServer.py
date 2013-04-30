@@ -28,22 +28,17 @@ class Game:
             return None
     
     def addPlayer(self, socket):
-
-        maze = None
-        size = None
+        
         game = self.findAvailableGame()
                
         if game:
-            maze = game.addPlayer(socket)
-            if maze:
-                size = game.getSize()
-            else:
+            if not game.addPlayer(socket):
                 game = None
         else:
             if self.available:
                 available = False
     
-        return (game, (size, maze))
+        return game
 
     def findAvailableGame(self):
 
@@ -61,7 +56,6 @@ class GameRoom:
 
         self.sockets = []
         self.mazes = []
-        self.ids = []
         self.capacity = 7
         self.numOfPlayers = 0
         self.playersReady = 0
@@ -69,13 +63,21 @@ class GameRoom:
         self.sizeh = 10
         self.start = False
         
-    def getSize(self):
+    def getMazeSize(self):
         return (self.sizew, self.sizeh)
+
+    def getMaze(self, socket):
+        index = self.sockets.index(socket)
+        return self.mazes[index]
+
+    def getId(self, soc):
+        return self.sockets.index(soc)
 
     def getnumOfPlayers(self):
         return self.numOfPlayers
 
     def addPlayer(self, socket):
+
         if self.numOfPlayers < self.capacity:
             maze = mazelib.createMaze(self.sizew, self.sizeh)
             maze = list(chain(*maze))
@@ -84,27 +86,26 @@ class GameRoom:
             self.mazes.append(maze)
             self.sockets.append(socket)
             self.numOfPlayers += 1
-            return self.mazes[self.numOfPlayers-1]
+            return True
+
         else:
-            return None
+            return False
 
     #call close on all sockets
     def gamefinished(self):
         pass
 
     def canIaddPlayer(self):
-        return True if self.capacity > self.numOfPlayers else False
+        return True if self.capacity > self.numOfPlayers and not self.start else False
 
     def everyoneReady(self):
         for socket in self.sockets:
             for maze in self.mazes:
                 if self.mazes.index(maze) != self.sockets.index(socket):
-                    socket.send_emaz(maze)
+                    socket.send_emaz(str(self.mazes.index(maze))+" "+maze)
 
         for socket in self.sockets:
             socket.send_start()
-
-    
 
     def playerReady(self):
         self.playersReady += 1
@@ -116,6 +117,11 @@ class GameRoom:
             
     def playerNotReady(self):
         self.playersReady -= 1
+
+    def sendUpdate(self, socket, message):        
+        for soc in self.sockets:
+            if soc != socket:
+                soc.send_update(str(self.sockets.index(socket))+" "+message)
 
     def removePlayer(self, socket):
         pass
@@ -129,10 +135,10 @@ class MywebSocketHandler(tornado.websocket.WebSocketHandler):
         self.add_player()
         
     def send_emaz(self, maze):
-        self.write_message("emaz " + maze)
+        self.write_message("emaz "+maze)
         
     def send_maze(self):
-        self.write_message("maze "+str(self.sizew)+" "
+        self.write_message("maze "+ str(self.id)+" "+str(self.sizew)+" "
                            +str(self.sizeh)+" "+self.maze)
 
     def send_start(self):
@@ -143,14 +149,15 @@ class MywebSocketHandler(tornado.websocket.WebSocketHandler):
 
     def add_player(self):
 
-        game, mazeinfo = self.game.addPlayer(self)
+        game = self.game.addPlayer(self)
         
         if game:
             self.game = game
-            size, self.maze = mazeinfo
-            
-            self.sizew, self.sizeh = size
+            self.sizew, self.sizeh = self.game.getMazeSize()
+            self.maze = self.game.getMaze(self)
+            self.id = self.game.getId(self)
             self.send_maze()
+        
         else:
             self.write_message("fail " + "CAN\'T JOIN")
 
@@ -163,7 +170,7 @@ class MywebSocketHandler(tornado.websocket.WebSocketHandler):
             pass
         
         if "update" in message:
-            print message
+            self.game.sendUpdate(self, message[7:])
 
     def on_close(self):
         pass

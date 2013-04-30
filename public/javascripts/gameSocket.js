@@ -20,6 +20,7 @@ function messageHandler(str){
 
     case 'maze' :
         received_maze(data);
+		update();
         break;
 
     case 'emaz' :
@@ -27,11 +28,14 @@ function messageHandler(str){
 		break;
 
     case 'strt' : 
-		
 		initKeyboardInput();
         break;
 
-    case 'fail' : alert('자리 없다. 너 겜 못함ㅋㅋㅋㅋㅋ');
+	case 'updt' :
+
+		updateEnemy(data);
+		break;
+    case 'fail' : alert('NO MORE ROOM. YOU CANT PLAY LOLZ');
         break;
     }
 }
@@ -39,26 +43,40 @@ function messageHandler(str){
 function received_maze(mazestr){
 	
 	strs = mazestr.split(' ');
-	myApp.mazesizew = parseInt(strs[0], 10);
-	myApp.mazesizeh = parseInt(strs[1], 10);
-	myApp.mazecellw = myApp.stage[0].getWidth()/myApp.mazesizew;
-	myApp.mazecellh = myApp.stage[0].getHeight()/myApp.mazesizeh;
-	myApp.maze[0] = createGridFromString(strs[2]);
-	update();
+	myApp.id = parseInt(strs[0], 10);
+
+	myApp.mazesizew = parseInt(strs[1], 10);
+	myApp.mazesizeh = parseInt(strs[2], 10);
+	myApp.maze[myApp.id] = createGridFromString(strs[3]);
+
+	initVariables();
+    initStage();
 }
 
 function received_emaz(mazestr){
+	
+	strs = mazestr.split(' ');
+	id = parseInt(strs[0], 10);
+	index = getdivNameIndex();
 
-	myApp.numOfPlayers += 1;
-	myApp.maze[myApp.numOfPlayers] = createGridFromString(mazestr);
-	myApp.stage[myApp.numOfPlayers] = new Kinetic.Stage({
-       									container: myApp.divNames[myApp.numOfPlayers],
+	myApp.maze[id] = createGridFromString(strs[1]);
+
+	myApp.stage[id] = new Kinetic.Stage({
+       									container: myApp.divNames[index],
        									width: 300, height: 150
    									});
 	var layer = new Kinetic.Layer();
-	myApp.stage[myApp.numOfPlayers].add(layer);
-	$("#"+myApp.divNames[myApp.numOfPlayers]).css("display", "inline");		
-	drawEntireMaze(myApp.stage[myApp.numOfPlayers], myApp.maze[myApp.numOfPlayers]);
+	myApp.stage[id].add(layer);
+	$("#"+myApp.divNames[index]).css("display", "inline");		
+	drawEntireMaze(myApp.stage[id], myApp.maze[id]);
+	initEnemyPlayer(id);
+}
+
+function getdivNameIndex(){
+
+	var index = myApp.divNameFree.shift();
+	myApp.divNameInUse.unshift(index);
+	return index;
 }
 
 function send_update(){
@@ -83,13 +101,13 @@ function createGridFromString(str){
 
 function send_ready(){
 	
-	if(myApp.ready){
+	/*if(myApp.ready){
 		myApp.ready=false;
-		$('#readyButton').text('준비');
+		$('#readyButton').text('READY');
 		myApp.ws.send("notrd");		
-	}else{
-		myApp.ready=true;
-		$('#readyButton').text('준비 끝!');
-		myApp.ws.send("ready");	
-	}
+	}else{*/
+	myApp.ready=true;
+	$('#readyButton').text('STARTING....!');
+	myApp.ws.send("ready");	
+	//}
 }

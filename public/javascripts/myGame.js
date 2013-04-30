@@ -29,8 +29,7 @@ function initKeyboardInput(){
 
 $(function(){
 
-    initVariables();
-    initStage();
     initWebSocket();
+	
 });
 

@@ -137,15 +137,15 @@ function canIgo(x1, y1, x2, y2){
 		}			
 		else{
 			if ((x1_cor == x2_cor) && (y1_cor == y2_cor)){
-				collision = myApp.maze[0][x1_cor][y1_cor] & wall[myApp.currentDirection];		
+				collision = myApp.maze[myApp.id][x1_cor][y1_cor] & wall[myApp.currentDirection];		
 			}			
 			else{
-				collision = myApp.maze[0][x1_cor][y1_cor] & wall[myApp.currentDirection];
+				collision = myApp.maze[myApp.id][x1_cor][y1_cor] & wall[myApp.currentDirection];
 				if (collision > 0){		
-					collision = myApp.maze[0][x2_cor][y2_cor] & wall[myApp.currentDirection];
+					collision = myApp.maze[myApp.id][x2_cor][y2_cor] & wall[myApp.currentDirection];
 					if( collision > 0 ){
 						var wallEnd = [0,1,4,4,1]
-						collision = myApp.maze[0][next_x1][next_y1] & 
+						collision = myApp.maze[myApp.id][next_x1][next_y1] & 
 									wallEnd[myApp.currentDirection];						
 					}
 				}

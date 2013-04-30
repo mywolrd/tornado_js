@@ -12,18 +12,45 @@ function initStage(){
 	    });
 		
 		myApp.currentDirection = 3;
-
+		
 	    myApp.layer.game.add(myApp.myPlayer);       
-		myApp.stage[0].add(myApp.layer.game);    
 		myApp.myPlayer.start();	
 	}
+
+	myApp.stage[myApp.id].add(myApp.layer.game);
 
     //myApp.layer.misc1.add(myApp.text.time);
     myApp.misc.add(myApp.layer.misc);
 }
 
+function initEnemyPlayer(index){
+
+	var layer = myApp.stage[index].getChildren()[0]; 
+	
+	myApp.enemyPlayer[index] = new Kinetic.Rect({
+		x: 1, y: 1, width:13, height:13,
+		fill: 'black', stroke: 'black',strockWidth:1
+	});
+
+	layer.add(myApp.enemyPlayer[index]);
+
+	myApp.stage[index].draw()
+}
+
+function updateEnemy(update){
+
+	strs = update.split(' ');
+	index = parseInt(strs[0], 10);
+	locx = parseInt(strs[1], 10);
+	locy = parseInt(strs[2], 10);
+
+	myApp.enemyPlayer[index].setX(locx * 15 + 1);
+	myApp.enemyPlayer[index].setY(locy * 15 + 1);
+	myApp.stage[index].draw();
+}
+
 function update(){
-		
+	
 	drawLimitedMaze();
 }
 
@@ -48,7 +75,7 @@ function drawLimitedMaze(){
     far_y = (far_y > myApp.mazesizeh) ? myApp.mazesizeh : far_y;
 
 	clear();
-	drawMaze(myApp.stage[0], myApp.maze[0], str_x, str_y, far_x, far_y);
+	drawMaze(myApp.stage[myApp.id], myApp.maze[myApp.id], str_x, str_y, far_x, far_y);
 }
 
 function getXindex(x){
@@ -58,6 +85,7 @@ function getXindex(x){
 function getYindex(y){
 	return Math.floor(y / myApp.mazecellh);
 }
+
 function clear(){
 
 	var children = myApp.layer.game.getChildren();
@@ -76,7 +104,7 @@ function drawEntireMaze(stage, maze){
 function drawMaze(stage, maze, str_x, str_y, far_x, far_y){
 
     var x1, x2, y1, y2;
-
+	var size = (stage === myApp.stage[myApp.id])? 5 : 2; 
     var x = stage.getWidth() / myApp.mazesizew;
 	var y = stage.getHeight() / myApp.mazesizeh;
 
@@ -105,7 +133,7 @@ function drawMaze(stage, maze, str_x, str_y, far_x, far_y){
 
 		                var line = new Kinetic.Line({
 		                    points: [x2, y1, x2, y2],    stroke: 'green',
-		                    strokeWidth: 5,    lineCap: 'square'
+		                    strokeWidth: size,    lineCap: 'square'
 		                });
 		                layer.add(line);
 		            }
@@ -119,7 +147,7 @@ function drawMaze(stage, maze, str_x, str_y, far_x, far_y){
 
 		                var line = new Kinetic.Line({
 		                    points: [x1, y2, x2, y2],    stroke: 'green',
-		                    strokeWidth: 5,    lineCap: 'square'
+		                    strokeWidth: size,    lineCap: 'square'
 		                });
 		                layer.add(line);
 		            }

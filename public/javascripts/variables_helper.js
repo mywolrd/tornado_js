@@ -2,7 +2,7 @@
 // Initialize variables
 function initVariables(){
     
-    myApp.stage[0] = new Kinetic.Stage({
+    myApp.stage[myApp.id] = new Kinetic.Stage({
         container: 'game',
         width: 1000, height: 500
     });
@@ -22,6 +22,9 @@ function initVariables(){
     });
 
     myApp.layer.misc = new Kinetic.Layer();
+
+	myApp.mazecellw = myApp.stage[myApp.id].getWidth()/myApp.mazesizew;
+	myApp.mazecellh = myApp.stage[myApp.id].getHeight()/myApp.mazesizeh;
 
     /*myApp.time = new Kinetic.Text({
         fill: 'black',
