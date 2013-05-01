@@ -32,8 +32,10 @@ function messageHandler(str){
         break;
 
 	case 'updt' :
-
 		updateEnemy(data);
+		break;
+	case 'left' :
+		player_left(data);
 		break;
     case 'fail' : alert('NO MORE ROOM. YOU CANT PLAY LOLZ');
         break;
@@ -77,6 +79,14 @@ function getdivNameIndex(){
 	var index = myApp.divNameFree.shift();
 	myApp.divNameInUse.unshift(index);
 	return index;
+}
+
+function player_left(indexstr){
+
+	var index = parseInt(indexstr, 10);
+	var divName = myApp.stage[index].getContainer().getAttribute('id');	
+	$("#"+divName).css("display", "none");
+	//Do I need to reset stage, maze, player?
 }
 
 function send_update(){

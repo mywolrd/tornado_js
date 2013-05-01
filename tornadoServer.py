@@ -56,9 +56,9 @@ class GameRoom:
 
         self.sockets = []
         self.mazes = []
+        self.ready = []
         self.capacity = 7
         self.numOfPlayers = 0
-        self.playersReady = 0
         self.sizew = 20
         self.sizeh = 10
         self.start = False
@@ -83,6 +83,7 @@ class GameRoom:
             maze = list(chain(*maze))
             maze = ','.join(str(x) for x in maze)
 
+            self.ready.append(False)
             self.mazes.append(maze)
             self.sockets.append(socket)
             self.numOfPlayers += 1
@@ -100,18 +101,20 @@ class GameRoom:
 
     def everyoneReady(self):
         for socket in self.sockets:
-            for maze in self.mazes:
-                if self.mazes.index(maze) != self.sockets.index(socket):
-                    socket.send_emaz(str(self.mazes.index(maze))+" "+maze)
+            if socket:
+                for maze in self.mazes:
+                    if self.mazes.index(maze) != self.sockets.index(socket) and maze != "" :
+                        socket.send_emaz(str(self.mazes.index(maze))+" "+maze)
 
         for socket in self.sockets:
-            socket.send_start()
+            if socket:
+                socket.send_start()
 
-    def playerReady(self):
-        self.playersReady += 1
-        
+    def playerReady(self, socket):
+        self.ready[self.sockets.index(socket)] = True
+           
         # send "start" message to every sockets in the game
-        if self.playersReady == self.numOfPlayers:
+        if self.ready.count(True) == self.numOfPlayers:
             self.everyoneReady()			
             self.start = True
             
@@ -120,11 +123,22 @@ class GameRoom:
 
     def sendUpdate(self, socket, message):        
         for soc in self.sockets:
-            if soc != socket:
+            if soc != socket and soc:
                 soc.send_update(str(self.sockets.index(socket))+" "+message)
 
     def removePlayer(self, socket):
-        pass
+
+        index = self.sockets.index(socket)
+
+        self.ready[index] = False
+        self.mazes[index] = ""
+        self.sockets[index] = None
+        self.numOfPlayers -= 1
+
+        if self.start:
+            for socket in self.sockets:
+                if socket:
+                    socket.player_left(index)
 
 class MywebSocketHandler(tornado.websocket.WebSocketHandler):
     
@@ -132,7 +146,7 @@ class MywebSocketHandler(tornado.websocket.WebSocketHandler):
         self.game = game
 
     def open(self):
-        self.add_player()
+        self.add_me()
         
     def send_emaz(self, maze):
         self.write_message("emaz "+maze)
@@ -147,38 +161,40 @@ class MywebSocketHandler(tornado.websocket.WebSocketHandler):
     def send_update(self, update):
         self.write_message("updt " + update)
 
-    def add_player(self):
+    def add_me(self):
 
         game = self.game.addPlayer(self)
         
         if game:
             self.game = game
+            self.ingame = True
             self.sizew, self.sizeh = self.game.getMazeSize()
             self.maze = self.game.getMaze(self)
             self.id = self.game.getId(self)
             self.send_maze()
         
         else:
+            self.ingame = False
             self.write_message("fail " + "CAN\'T JOIN")
 
     def on_message(self, message):                		        
         # if a client is ready for a game
         if "ready" in message:
-            self.game.playerReady()
+            self.game.playerReady(self)
 
-        if "notrd" in message:
-            pass
-        
         if "update" in message:
             self.game.sendUpdate(self, message[7:])
 
+    def player_left(self, index):
+        self.write_message("left " + str(index))
+
     def on_close(self):
-        pass
+        if self.ingame:
+            self.game.removePlayer(self)
 
 class MainHandler(tornado.web.RequestHandler):
     def get(self):
         self.render("index.html")
-
 
 def main():
 
