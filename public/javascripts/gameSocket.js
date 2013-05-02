@@ -86,7 +86,7 @@ function player_left(indexstr){
 	var index = parseInt(indexstr, 10);
 	var divName = myApp.stage[index].getContainer().getAttribute('id');	
 	$("#"+divName).css("display", "none");
-	//Do I need to reset stage, maze, player?
+	//Do I need to reset stage, maze, player
 }
 
 function send_update(){

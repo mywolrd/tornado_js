@@ -32,8 +32,7 @@ class Game:
         game = self.findAvailableGame()
                
         if game:
-            if not game.addPlayer(socket):
-                game = None
+            game.addPlayer(socket)
         else:
             if self.available:
                 available = False
@@ -78,19 +77,30 @@ class GameRoom:
 
     def addPlayer(self, socket):
 
-        if self.numOfPlayers < self.capacity:
-            maze = mazelib.createMaze(self.sizew, self.sizeh)
-            maze = list(chain(*maze))
-            maze = ','.join(str(x) for x in maze)
+        maze = self.createMaze()
+        self.numOfPlayers += 1
 
-            self.ready.append(False)
-            self.mazes.append(maze)
-            self.sockets.append(socket)
-            self.numOfPlayers += 1
-            return True
-
+        if len(self.sockets) == self.capacity:
+            self.modify_player(maze, socket)
         else:
-            return False
+            self.add_player(maze, socket)
+            
+    def modify_player(self, maze, socket):
+        index = self.sockets.index(None)
+        self.sockets[index] = socket
+        self.mazes[index] = maze
+        self.ready[index] = False
+
+    def add_player(self, maze, socket):
+        self.ready.append(False)
+        self.mazes.append(maze)
+        self.sockets.append(socket)
+        
+    def createMaze(self):
+        maze = mazelib.createMaze(self.sizew, self.sizeh)
+        maze = list(chain(*maze))
+        maze = ','.join(str(x) for x in maze)
+        return maze
 
     #call close on all sockets
     def gamefinished(self):
@@ -130,7 +140,7 @@ class GameRoom:
 
         index = self.sockets.index(socket)
 
-        self.ready[index] = False
+        self.ready[index] = None
         self.mazes[index] = ""
         self.sockets[index] = None
         self.numOfPlayers -= 1
@@ -162,7 +172,8 @@ class MywebSocketHandler(tornado.websocket.WebSocketHandler):
         self.write_message("updt " + update)
 
     def add_me(self):
-
+        
+        self.ingame = False
         game = self.game.addPlayer(self)
         
         if game:
