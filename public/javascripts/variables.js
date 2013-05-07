@@ -12,17 +12,17 @@ myApp = {
     //GAME INFO
     ready : false,
     ingame: false,
-	goalx : 19,
-	goaly :  9,
-	curx :0,
-	cury :0,
-	enemyPlayer: [],
+    goalx : 19,
+    goaly :  9,
+    curx :0,
+    cury :0,
+    enemyPlayer: [],
 
     //PLAYER INFO
     x : 0,
     y : 0,
     ts : 7,
-	id : -1,
+    id : -1,
  
     //GRAPHICS
     sprite : {
@@ -45,9 +45,9 @@ myApp = {
 
     stage :[],
     layer :{},
-	maze : [],
-	player:[],
-	divNames:["none", "enemy1","enemy2","enemy3","enemy4","enemy5","enemy6"],
-	divNameInUse: [],
-	divNameFree: [1,2,3,4,5,6]
+    maze : [],
+    player:[],
+    divNames:["none", "enemy1","enemy2","enemy3","enemy4","enemy5","enemy6"],
+    divNameInUse: [],
+    divNameFree: [1,2,3,4,5,6]
 }

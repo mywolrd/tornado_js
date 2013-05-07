@@ -18,14 +18,14 @@ function initVariables(){
 	//PANEL LAYER 
     myApp.misc = new Kinetic.Stage({
         container: 'misc',
-		width: 150, height: 50
+	width: 150, height: 50
     });
 
     myApp.layer.misc = new Kinetic.Layer();
 
-	myApp.mazecellw = myApp.stage[myApp.id].getWidth()/myApp.mazesizew;
-	myApp.mazecellh = myApp.stage[myApp.id].getHeight()/myApp.mazesizeh;
-
+    myApp.mazecellw = myApp.stage[myApp.id].getWidth()/myApp.mazesizew;
+    myApp.mazecellh = myApp.stage[myApp.id].getHeight()/myApp.mazesizeh;
+    
     /*myApp.time = new Kinetic.Text({
         fill: 'black',
         align: 'center',
